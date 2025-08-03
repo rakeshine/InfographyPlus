@@ -1,22 +1,62 @@
+"""
+SVG Utilities Module
+
+This module contains functionality for processing SVG templates and injecting
+content from JSON data files.
+"""
+
 import xml.etree.ElementTree as ET
 import json
 from config import json_path
 
+# Namespace constants
 SVG_NS = '{http://www.w3.org/2000/svg}'
 INKSCAPE_NS = '{http://www.inkscape.org/namespaces/inkscape}'
 
+
 def strip_ns(tag):
+    """
+    Strip namespace from XML tag.
+    
+    Args:
+        tag (str): XML tag that may contain namespace
+        
+    Returns:
+        str: Tag without namespace
+    """
     if '}' in tag:
         return tag.split('}', 1)[1]
     return tag
 
 
 def estimate_word_width(word, font_size=16, char_width_factor=0.6):
+    """
+    Estimate the width of a word in pixels.
+    
+    Args:
+        word (str): Word to estimate width for
+        font_size (int): Font size in pixels
+        char_width_factor (float): Average character width factor
+        
+    Returns:
+        float: Estimated width in pixels
+    """
     # Approximate the width of a word in pixels assuming average char width ~0.6 * font_size
     return len(word) * font_size * char_width_factor
 
 
 def wrap_text(text, max_width, font_size=16):
+    """
+    Wrap text to fit within a specified width.
+    
+    Args:
+        text (str): Text to wrap
+        max_width (float): Maximum width in pixels
+        font_size (int): Font size in pixels
+        
+    Returns:
+        list: List of wrapped lines
+    """
     words = text.split()
     lines = []
     current_line = ''
@@ -46,6 +86,19 @@ def wrap_text(text, max_width, font_size=16):
 
 
 def add_wrapped_text(parent, x, y, text, font_size, box_width, line_height=None, right_align=False):
+    """
+    Add wrapped text to an SVG element.
+    
+    Args:
+        parent (Element): Parent SVG element to add text to
+        x (float): X coordinate for text
+        y (float): Y coordinate for text
+        text (str): Text to add
+        font_size (int): Font size in pixels
+        box_width (float): Maximum width for text wrapping
+        line_height (float, optional): Height between lines
+        right_align (bool): Whether to right-align text
+    """
     if line_height is None:
         line_height = font_size * 1.2
     
@@ -81,20 +134,38 @@ def add_wrapped_text(parent, x, y, text, font_size, box_width, line_height=None,
     
     parent.append(text_elem)
 
+
 def process_svg(svg_file, headers_file, output_file):
+    """
+    Process SVG template and inject content from JSON data.
+    
+    This function reads an SVG template, replaces labeled rectangles with
+    wrapped text content from JSON data, and updates the JSON with position
+    information for video generation.
+    
+    Args:
+        svg_file (str): Path to input SVG template
+        headers_file (str): Path to JSON file with content data
+        output_file (str): Path to output processed SVG file
+    """
+    # Register namespaces
     ET.register_namespace('', "http://www.w3.org/2000/svg")
     ET.register_namespace('inkscape', "http://www.inkscape.org/namespaces/inkscape")
     
+    # Parse SVG
     tree = ET.parse(svg_file)
     root = tree.getroot()
     
+    # Load content data
     with open(headers_file, 'r', encoding='utf-8') as hf:
         data = json.load(hf)
 
+    # Map headers to labels
     headers = [obj.get('title', '') for obj in data]
     label_names = ['header1', 'header2', 'header3', 'header4']
     header_map = {label: headers[i] if i < len(headers) else "" for i, label in enumerate(label_names)}
     
+    # Find rectangles to replace
     rects_to_replace = []
     label_positions = {}  # Will hold x,y positions for each label
 
@@ -110,9 +181,11 @@ def process_svg(svg_file, headers_file, output_file):
                 height = float(elem.attrib.get('height', '0'))
                 label_positions[label] = {'x': x, 'y': y, 'width': width, 'height': height}
     
+    # Text formatting constants
     FONT_SIZE = 42
     LINE_HEIGHT = FONT_SIZE * 1.2
 
+    # Replace rectangles with text
     for rect in rects_to_replace:
         label = rect.attrib.get(f'{INKSCAPE_NS}label')
         header_text = header_map.get(label, '')

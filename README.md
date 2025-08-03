@@ -1,69 +1,69 @@
-# Infographic Explainer Video Generator (No Audio)
+# Infographic+ Video Generator
+
+A modular Python application for generating animated videos from SVG templates and JSON content data.
+
+## Project Structure
+
+```
+.
+├── assets/                 # Assets directory (fonts, images, templates)
+├── content.json           # Content data file
+├── config.py              # Configuration settings
+├── main.py                # Main entry point
+├── requirements.txt       # Python dependencies
+├── core/                  # Core functionality modules
+│   ├── __init__.py        # Package initializer
+│   ├── audio_handler.py   # Audio handling functions
+│   └── video_generator.py # Main video generation logic
+└── video/                 # Video processing modules
+    ├── __init__.py        # Package initializer
+    ├── dialogue.py        # Dialogue clip generation
+    ├── effects.py         # Image effects (wrapper)
+    ├── effects_utils.py   # Visual effects implementation
+    ├── gif_utils.py       # GIF processing utilities
+    └── svg_utils.py       # SVG processing utilities
+```
+
+## Modules Overview
+
+### Core Modules
+
+- **`core/video_generator.py`** - Main video generation logic with `VideoGenerator` class
+- **`core/audio_handler.py`** - Audio processing functions including TTS
+
+### Video Modules
+
+- **`video/dialogue.py`** - Dialogue clip generation with typewriter effects
+- **`video/effects_utils.py`** - Visual effects implementation (click effects, blur)
+- **`video/effects.py`** - Wrapper for image effects
+- **`video/gif_utils.py`** - GIF processing and text wrapping utilities
+- **`video/svg_utils.py`** - SVG template processing and content injection
+
+### Utility Modules
+
+- **`config.py`** - Configuration settings and file paths
 
 ## Usage
-1. Place your infographic image at `assets/infographic.png`
-2. Add point-wise explanation in `.txt` files like `point1.txt`, `point2.txt` in `assets/texts/`
-3. Run:
+
 ```bash
-pip install -r requirements.txt
-python generate_video.py
+# Generate video with audio
+python main.py
+
+# Generate video without audio
+python main.py --no-audio
+
+# Specify output file
+python main.py --output my_video.mp4
 ```
-Final video will be saved in `output/final_video.mp4`
 
+## Key Improvements
 
-Give me 4 points for financial tips in a json format such that each point should have a clear title in not more than 6 words. Each title should have description of three or four key points that explains the titles to the point short and precise. Consider a point is maximum a two liner text.
+1. **Modular Design** - Separated concerns into distinct modules
+2. **Improved Documentation** - Comprehensive docstrings for all functions
+3. **Consistent API** - Unified interface for video generation
+4. **Better Organization** - Logical grouping of related functionality
 
-[
-  {
-    "title": "Build an Emergency Fund",
-    "points": [
-      "Save at least 3–6 months' expenses.",
-      "Use a separate high-interest savings account.",
-      "Start small, automate monthly contributions.",
-      "Avoid dipping into it for non-emergencies."
-    ],
-    "position": {
-      "x": 629.98547,
-      "y": 219.97488
-    }
-  },
-  {
-    "title": "Track and Limit Expenses",
-    "points": [
-      "Use budgeting apps to monitor spending.",
-      "Categorize and cut non-essential costs.",
-      "Follow the 50-30-20 rule for budgeting.",
-      "Review expenses weekly to stay on track."
-    ],
-    "position": {
-      "x": 48.126694,
-      "y": 638.68842
-    }
-  },
-  {
-    "title": "Invest Early and Regularly",
-    "points": [
-      "Start with index funds or SIPs.",
-      "Leverage compound interest for long-term gains.",
-      "Invest a fixed amount every month.",
-      "Stay invested despite short-term market dips."
-    ],
-    "position": {
-      "x": 629.98547,
-      "y": 1029.7236
-    }
-  },
-  {
-    "title": "Clear High-Interest Debt Fast",
-    "points": [
-      "Prioritize credit cards and personal loans.",
-      "Pay more than the minimum due monthly.",
-      "Consider balance transfers or consolidation plans.",
-      "Avoid new debt until existing is cleared."
-    ],
-    "position": {
-      "x": 48.126694,
-      "y": 1387.7136
-    }
-  }
-]
+## Dependencies
+
+See `requirements.txt` for the list of required Python packages.
+
