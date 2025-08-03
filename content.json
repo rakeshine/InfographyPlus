@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Build an Emergency Fund",
+    "points": [
+      "Save at least 3–6 months' expenses.",
+      "Use a separate high-interest savings account.",
+      "Start small, automate monthly contributions.",
+      "Avoid dipping into it for non-emergencies."
+    ],
+    "position": {
+      "x": 629.98547,
+      "y": 219.97488,
+      "width": 467.71356,
+      "height": 187.9397
+    }
+  },
+  {
+    "title": "Track and Limit Expenses",
+    "points": [
+      "Use budgeting apps to monitor spending.",
+      "Categorize and cut non-essential costs.",
+      "Follow the 50-30-20 rule for budgeting.",
+      "Review expenses weekly to stay on track."
+    ],
+    "position": {
+      "x": 48.126694,
+      "y": 638.68842,
+      "width": 467.71356,
+      "height": 187.9397
+    }
+  },
+  {
+    "title": "Invest Early and Regularly",
+    "points": [
+      "Start with index funds or SIPs.",
+      "Leverage compound interest for long-term gains.",
+      "Invest a fixed amount every month.",
+      "Stay invested despite short-term market dips."
+    ],
+    "position": {
+      "x": 629.98547,
+      "y": 1029.7236,
+      "width": 467.71356,
+      "height": 187.9397
+    }
+  },
+  {
+    "title": "Clear High-Interest Debt Fast",
+    "points": [
+      "Prioritize credit cards and personal loans.",
+      "Pay more than the minimum due monthly.",
+      "Consider balance transfers or consolidation plans.",
+      "Avoid new debt until existing is cleared."
+    ],
+    "position": {
+      "x": 48.126694,
+      "y": 1387.7136,
+      "width": 467.71356,
+      "height": 187.9397
+    }
+  }
+]
