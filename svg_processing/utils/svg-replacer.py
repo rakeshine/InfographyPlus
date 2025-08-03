@@ -3,9 +3,9 @@ import json
 import textwrap
 
 # === Set file paths ===
-SVG_INPUT = "../output/5points_plant.svg"
-JSON_INPUT = "../output/text_blocks.json"
-SVG_OUTPUT = "../output/output_with_texts.svg"
+SVG_INPUT = "../output/parsed.svg"
+JSON_INPUT = "../output/info.json"
+SVG_OUTPUT = "../output/final.svg"
 
 def wrap_text(text, max_chars):
     """Wrap text to specified maximum characters per line"""

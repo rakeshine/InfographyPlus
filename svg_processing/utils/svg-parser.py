@@ -16,9 +16,9 @@ except ImportError:
     print("Selenium not available, will use direct extraction only")
 
 # === SET FILE PATHS HERE ===
-INPUT_SVG = "../input/5points_plant.svg"
-OUTPUT_SVG = "../output/5points_plant.svg"
-OUTPUT_JSON = "../output/text_blocks.json"
+INPUT_SVG = "../input/5points_services.svg"
+OUTPUT_SVG = "../output/parsed.svg"
+OUTPUT_JSON = "../output/info.json"
 
 def setup_selenium():
     """Set up Selenium WebDriver with headless Chrome"""
