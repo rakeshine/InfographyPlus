@@ -1,21 +1,66 @@
 """
-Configuration Module
-
-This module contains configuration settings for the video generation system,
-including file paths for input templates, assets, and output files.
+Configuration Module - Centralized settings for all modules
+This module contains all configuration settings for the Infography+ project
 """
 
-from pathlib import Path
+import os
 
-# Input file paths
-json_path = "content.json"                    # Content data file
-svg_path = "assets/templates/4points_process.svg"  # SVG template file
-cartoon_path = "assets/images/atom.gif"       # Cartoon character GIF
-bullet_icon_path = "assets/images/bullet_spiral.gif"  # Bullet point icon
-font_path = "assets/fonts/Cinzel-VariableFont_wght.ttf"  # Font file
+# Base paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Output file paths
-converted_image_path = "output/final.png"     # Converted SVG to PNG
-audio_folder = "output"                        # Folder for audio files
-output_path = "output/final_video.mp4"         # Final video output
-output_svg_path = 'output/final.svg'          # Processed SVG output
+
+
+# Module paths
+MODULE_CONFIG = {
+    "generate_infography_base": {
+        "path": os.path.join(BASE_DIR, "generate_infography_base"),
+        "functionalities": {
+            "svg-parser": {
+                "input": os.path.join(BASE_DIR, "generate_infography_base", "input", "5points_plant.svg"),
+                "output_svg": os.path.join(BASE_DIR, "generate_infography_base", "output", "parsed.svg"),
+                "output_json": os.path.join(BASE_DIR, "generate_infography_base", "output", "info.json"),
+                'default_fill_color': 'black',
+                'default_font_size': 16,
+                'default_font_family': 'Arial',
+                
+                # Color values
+                'colors': {
+                    'black': '#000000',
+                    'white': '#ffffff',
+                    'text': 'black'
+                }
+            },
+            "svg-replacer": {
+                "input_svg": os.path.join(BASE_DIR, "generate_infography_base", "output", "parsed.svg"),
+                "input_json": os.path.join(BASE_DIR, "generate_infography_base", "output", "info.json"),
+                "output": os.path.join(BASE_DIR, "generate_infography_base", "output", "final.svg")
+            }
+        }
+    },
+    "generate_infography_video": {
+        "path": os.path.join(BASE_DIR, "generate_infography_video"),
+        "functionalities": {
+            "video-generator": {
+                "json_path": os.path.join(BASE_DIR, "generate_infography_video", "input", "content.json"),
+                "svg_path": os.path.join(BASE_DIR, "assets", "templates", "4points_process.svg"),
+                "cartoon_path": os.path.join(BASE_DIR, "assets", "images", "atom.gif"),
+                "bullet_icon_path": os.path.join(BASE_DIR, "assets", "images", "bullet_spiral.gif"),
+                "font_path": os.path.join(BASE_DIR, "assets", "fonts", "Cinzel-VariableFont_wght.ttf"),
+                "converted_image_path": os.path.join(BASE_DIR, "generate_infography_video", "output", "final.png"),
+                "audio_folder": os.path.join(BASE_DIR, "generate_infography_video", "output"),
+                "output_path": os.path.join(BASE_DIR, "generate_infography_video", "output", "final_video.mp4"),
+                "output_svg_path": os.path.join(BASE_DIR, "generate_infography_video", "output", "final.svg")
+            }
+        }
+    },
+    "generate_narration_video": {
+        "path": os.path.join(BASE_DIR, "generate_narration_video"),
+        "functionalities": {
+            "narration-video": {
+                "background": os.path.join(BASE_DIR, "generate_narration_video", "background.jpg"),
+                "audio": os.path.join(BASE_DIR, "generate_narration_video", "narration.wav"),
+                "output_video": os.path.join(BASE_DIR, "generate_narration_video", "output", "narration_video.mp4")
+            }
+        }
+    }
+}

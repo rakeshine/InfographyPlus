@@ -6,3 +6,5 @@ selenium
 cairosvg
 gTTS
 ffmpeg
+git+https://github.com/openai/whisper.git
+pysrt
