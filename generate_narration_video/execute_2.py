@@ -11,41 +11,54 @@ from moviepy.editor import (
     AudioFileClip,
 )
 
-# Add project root to sys.path for config import (two levels up)
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add project root to sys.path for config import
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import MODULE_CONFIG
 
 
-def typing_clip_by_chars(text, duration, fontsize, font, video_size, text_width):
-    chars = list(text)
-    n = max(1, len(chars))
-    per_char = duration / n
+def typing_clip_by_words(text, duration, fontsize, font, video_size):
+    """
+    Create a single clip (centered) that types the text word-by-word
+    over total `duration`.
+    """
+    words = text.split()
+    n = max(1, len(words))
+    per_word = duration / n
 
     subclips = []
     for i in range(1, n + 1):
-        part = "".join(chars[:i])
-
+        part = " ".join(words[:i])
         txt = TextClip(
             part,
             fontsize=fontsize,
             font=font,
             color="white",
             method="caption",
-            size=(text_width, video_size[1]),  # adjustable width, full video height
+            #size=(video_size[0] - 100, None),
+            size=(600, None),
             align="center",
             stroke_color="black",
             stroke_width=2,
-        ).set_duration(per_char).set_position(("center", "center"))
+        ).set_duration(per_word)
 
-        subclips.append(txt)
+        # Wrap in a CompositeVideoClip to center inside full video canvas
+        centered_txt = CompositeVideoClip(
+            [txt.set_position("center")],
+            size=video_size
+        ).set_duration(per_word)
+
+        subclips.append(centered_txt)
 
     seg_clip = concatenate_videoclips(subclips, method="compose")
+
+    # Cleanup
     for c in subclips:
         try:
             c.close()
         except:
             pass
     gc.collect()
+
     return seg_clip
 
 
@@ -66,7 +79,6 @@ def main():
     FONT_SIZE = 50
     VIDEO_SIZE = (1280, 720)
     FONT = "Arial-Bold"
-    TEXT_WIDTH = 900
 
     srt_path = "transcript.srt"
     if not os.path.exists(srt_path):
@@ -99,7 +111,7 @@ def main():
         print(f"Segment {idx}: '{seg_text}' [{start_time:.2f}s → {end_time:.2f}s]")
 
         try:
-            seg_clip = typing_clip_by_chars(seg_text, seg_duration, FONT_SIZE, FONT, VIDEO_SIZE, TEXT_WIDTH)
+            seg_clip = typing_clip_by_words(seg_text, seg_duration, FONT_SIZE, FONT, VIDEO_SIZE)
             seg_clip = seg_clip.set_start(start_time)
             clips.append(seg_clip)
         except Exception as e:

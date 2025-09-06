@@ -11,8 +11,8 @@ from moviepy.editor import (
     AudioFileClip,
 )
 
-# Add project root to sys.path for config import (two levels up)
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add project root to sys.path for config import
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import MODULE_CONFIG
 
 

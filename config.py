@@ -57,9 +57,9 @@ MODULE_CONFIG = {
         "path": os.path.join(BASE_DIR, "generate_narration_video"),
         "functionalities": {
             "narration-video": {
-                "background": os.path.join(BASE_DIR, "generate_narration_video", "background.jpg"),
+                "background": os.path.join(BASE_DIR, "generate_narration_video", "background.jpeg"),
                 "audio": os.path.join(BASE_DIR, "generate_narration_video", "narration.wav"),
-                "output_video": os.path.join(BASE_DIR, "generate_narration_video", "output", "narration_video.mp4")
+                "output_video": os.path.join(BASE_DIR, "generate_narration_video", "narration_video.mp4")
             }
         }
     }
