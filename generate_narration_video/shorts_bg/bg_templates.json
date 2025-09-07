@@ -1,0 +1,9 @@
+{
+  "bg1.gif": {"font_family": "Montserrat.ttf", "font_weight": 700, "font_size": 76, "text_color": "#000000", "y": "center", "y_offset": -120},
+  "bg2.gif": {"font_family": "Oswald", "font_weight": 700, "font_size": 91, "text_color": "#000000", "y": "center", "y_offset": -120},
+  "bg3.gif": {"font_family": "Anton", "font_weight": 400, "font_size": 91, "text_color": "#000000", "y": "center", "y_offset": -120},
+  "bg4.gif": {"font_family": "Rubik Distressed", "font_weight": 400, "font_size": 36, "text_color": "#ffd200", "y": "center", "y_offset": -120},
+  "bg5.gif": {"font_family": "Roboto Condensed", "font_weight": 700, "font_size": 100, "text_color": "#ffffff", "y": "center", "y_offset": -120},
+  "bg6.gif": {"font_family": "Inter", "font_weight": 700, "font_size": 90, "text_color": "#ffffff", "y": "center", "y_offset": -120},
+  "bg7.gif": {"font_family": "Inter", "font_weight": 700, "font_size": 90, "text_color": "#ffffff", "y": "center", "y_offset": -120}
+}
