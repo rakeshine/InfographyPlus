@@ -188,3 +188,11 @@ For issues or questions:
 ## 📄 License
 
 This project is proprietary software. All rights reserved.
+
+
+## Prompt
+# Youtube Shorts
+Rephrase the above information into a format below with proper punctuations and text length not more than the text in below format. [ {"text": "5 quick tips to instantly improve your presentations.", "duration": 2.0}, {"text": "1) Open with a strong hook—state a bold result or question.", "duration": 2.0}, {"text": "2) Use one key idea per slide. Remove anything that doesn’t support it.", "duration": 2.0}, {"text": "3) Tell a story—set up, conflict, resolution. Keep momentum.", "duration": 2.0}, {"text": "4) Use large text and high contrast. Design for the back row.", "duration": 2.0}, {"text": "5) Rehearse out loud. Time yourself and trim ruthlessly.", "duration": 2.0}, {"text": "Follow for more concise comms tips!", "duration": 2.0}, ]
+
+# Youtube Video
+Same as above except change duration to 10 to 12 seconds
