@@ -23,12 +23,11 @@ def generate_tts(text, out_path):
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     
     try:
-        tts = gTTS(text)
+        tts = gTTS(text, slow=False, lang="en", tld="co.in")
         tts.save(out_path)
         print(f"✅ TTS saved: {out_path}")
     except Exception as e:
         print(f"❌ TTS error: {e}")
-
 
 def get_audio_duration(audio_path):
     """

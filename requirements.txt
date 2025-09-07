@@ -5,6 +5,7 @@ numpy==1.26.4
 selenium
 cairosvg
 gTTS
-ffmpeg
+imageio>=2.26.0
+imageio-ffmpeg>=0.4.9
 git+https://github.com/openai/whisper.git
 pysrt

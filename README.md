@@ -195,4 +195,61 @@ This project is proprietary software. All rights reserved.
 Rephrase the above information into a format below with proper punctuations and text length not more than the text in below format. [ {"text": "5 quick tips to instantly improve your presentations.", "duration": 2.0}, {"text": "1) Open with a strong hook—state a bold result or question.", "duration": 2.0}, {"text": "2) Use one key idea per slide. Remove anything that doesn’t support it.", "duration": 2.0}, {"text": "3) Tell a story—set up, conflict, resolution. Keep momentum.", "duration": 2.0}, {"text": "4) Use large text and high contrast. Design for the back row.", "duration": 2.0}, {"text": "5) Rehearse out loud. Time yourself and trim ruthlessly.", "duration": 2.0}, {"text": "Follow for more concise comms tips!", "duration": 2.0}, ]
 
 # Youtube Video
-Same as above except change duration to 10 to 12 seconds
+Rephrase the above information into a format below with proper punctuations and text length not more than the text in below format. audio_text is for audio that will be generated using gTTS python in indian slang. So give appropriately.    
+[
+    {
+        "text": "German Car Company hiring in Mahindra City, Chennai.",
+        "duration": 10.0,
+        "audio_text": "Hello friends, German car company hiring now in Mahindra City, Chennai."
+    },
+    {
+        "text": "Work: 5 days a week. Saturday & Sunday off.",
+        "duration": 10.0,
+        "audio_text": "Work is only five days a week... Saturday and Sunday full holiday."
+    },
+    {
+        "text": "Eligibility: Male & Female, Age 18–23, Freshers & Experienced.",
+        "duration": 10.0,
+        "audio_text": "Eligibility: Boys and girls, age eighteen to twenty three... Freshers also welcome, experienced also okay."
+    },
+    {
+        "text": "Qualifications: Diploma / ITI / Any Degree passout.",
+        "duration": 10.0,
+        "audio_text": "Qualification needed: Diploma, ITI, or any degree pass out."
+    },
+    {
+        "text": "Roles: Assembly Operator – 25 openings (Diploma only).",
+        "duration": 10.0,
+        "audio_text": "Assembly operator job... Twenty five openings available... Diploma candidates only."
+    },
+    {
+        "text": "Logistics Dept – 15 openings (Degree & Diploma).",
+        "duration": 10.0,
+        "audio_text": "Logistics department also hiring... Fifteen openings for degree and diploma candidates."
+    },
+    {
+        "text": "Salary: Diploma – ₹19,800 + OT ₹176/hr.",
+        "duration": 10.0,
+        "audio_text": "Salary for diploma candidates is nineteen thousand eight hundred... Plus overtime, one seventy six rupees per hour extra."
+    },
+    {
+        "text": "Shift: First shift only. Food provided.",
+        "duration": 10.0,
+        "audio_text": "Shift is first shift only... Free food will be provided."
+    },
+    {
+        "text": "Room facility & bus routes from Tambaram to Chengalpattu.",
+        "duration": 10.0,
+        "audio_text": "Room facility available... Company bus also running from Tambaram to Chengalpattu."
+    },
+    {
+        "text": "Interview Contact: 7769003348 / 9342251196 / 7769003319.",
+        "duration": 10.0,
+        "audio_text": "For interview details, contact these numbers... seven seven six nine double zero, three three four eight... or nine three four two two five, one one nine six... or seven seven six nine double zero, three three one nine."
+    },
+    {
+        "text": "",
+        "duration": 8.0,
+        "audio_text": "Friends, this is a good opportunity... Apply fast and don’t miss it."
+    }
+]
