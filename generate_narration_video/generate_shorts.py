@@ -7,6 +7,7 @@ import urllib.parse
 import zipfile
 import io
 import re
+import sys
 from moviepy.editor import (
     TextClip,
     concatenate_videoclips,
@@ -20,9 +21,23 @@ from moviepy.editor import (
 # Text content is embedded below in TEXT_BLOCKS
 # -------------------------------
 
+# Hardcoded content: sequence of segments with durations (seconds)
+TEXT_BLOCKS = [
+    {"text": "German Car Company hiring in Mahindra City, Chennai.", "duration": 2.0},
+    {"text": "Work: 5 days a week. Saturday & Sunday off.", "duration": 2.0},
+    {"text": "Eligibility: Male & Female, Age 18–23, Freshers & Experienced.", "duration": 2.2},
+    {"text": "Qualifications: Diploma / ITI / Any Degree passout.", "duration": 2.0},
+    {"text": "Roles: Assembly Operator – 25 openings (Diploma only).", "duration": 2.2},
+    {"text": "Logistics Dept – 15 openings (Degree & Diploma).", "duration": 2.0},
+    {"text": "Salary: Diploma – ₹19,800 + OT ₹176/hr.", "duration": 2.0},
+    {"text": "Shift: First shift only. Food provided.", "duration": 2.0},
+    {"text": "Room facility & bus routes from Tambaram to Chengalpattu.", "duration": 2.2},
+    {"text": "Interview Contact: 7769003348 / 9342251196 / 7769003319.", "duration": 2.2}
+]
+
 # Paths (adjust if you prefer different assets/output)
 HERE = os.path.dirname(os.path.abspath(__file__))
-BACKGROUND_IMAGE = os.path.join(HERE, "shorts_bg", "bg4.gif")  # fallback to background.jpeg if .jpg not present
+BACKGROUND_IMAGE = os.path.join(HERE, "shorts_bg", "bg7.gif")  # fallback to background.jpeg if .jpg not present
 if not os.path.exists(BACKGROUND_IMAGE):
     alt = os.path.join(HERE, "background.jpeg")
     if os.path.exists(alt):
@@ -32,6 +47,8 @@ if not os.path.exists(BACKGROUND_IMAGE):
 OUTPUT_DIR = os.path.join(HERE, "shorts_output")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 OUTPUT_VIDEO = os.path.join(OUTPUT_DIR, "shorts.mp4")
+OUTPUT_IMAGES_DIR = os.path.join(OUTPUT_DIR, "images")
+os.makedirs(OUTPUT_IMAGES_DIR, exist_ok=True)
 
 # Video/Text config for Shorts
 VIDEO_SIZE = (1080, 1920)  # 9:16
@@ -264,6 +281,18 @@ def _infer_weight_from_name(name: str) -> int:
     return 400
 
 # Override typography and vertical position from bg_templates.json if there is a matching entry for the selected background
+def _parse_font_size(val, default):
+    try:
+        if isinstance(val, (int, float)):
+            return int(float(val))
+        if isinstance(val, str):
+            m = re.search(r"([0-9]+(?:\.[0-9]+)?)", val)
+            if m:
+                return int(float(m.group(1)))
+    except Exception:
+        pass
+    return default
+
 try:
     templates_path = os.path.join(HERE, "shorts_bg", "bg_templates.json")
     if os.path.exists(templates_path):
@@ -272,9 +301,15 @@ try:
         bg_name = os.path.basename(BACKGROUND_IMAGE)
         if bg_name in bg_templates:
             tpl = bg_templates[bg_name]
-            # If a direct font path or family is provided, apply; support Google Fonts auto-download
-            FONT_SIZE = int(float(tpl.get("font_size", FONT_SIZE)))
-            TEXT_COLOR = tpl.get("text_color", TEXT_COLOR)
+            # font size and color (robust parsing)
+            try:
+                FONT_SIZE = _parse_font_size(tpl.get("font_size", FONT_SIZE), FONT_SIZE)
+            except Exception:
+                pass
+            try:
+                TEXT_COLOR = tpl.get("text_color", TEXT_COLOR)
+            except Exception:
+                pass
 
             # Preferred order: use google font if specified, else use provided font string as-is
             fonts_dir = os.path.join(os.path.dirname(os.path.dirname(HERE)), "assets", "fonts")
@@ -287,11 +322,8 @@ try:
                     else:
                         # Try common locations
                         candidates = []
-                        # as given relative to assets/fonts
                         candidates.append(os.path.join(fonts_dir, fam))
-                        # under assets/fonts/google
                         candidates.append(os.path.join(fonts_dir, "google", fam))
-                        # under assets/fonts/google/<Family>/
                         base_name = os.path.basename(fam)
                         fam_dir = re.split(r"[- ]", base_name, maxsplit=1)[0]
                         candidates.append(os.path.join(fonts_dir, "google", fam_dir, base_name))
@@ -301,32 +333,30 @@ try:
                                 FONT = c
                                 break
                 else:
-                    weight = int(float(tpl.get("font_weight", 400)))
+                    # Ensure Google font is downloaded/selected
+                    try:
+                        weight = int(float(tpl.get("font_weight", 400)))
+                    except Exception:
+                        weight = 400
                     ttf_path = ensure_google_font_ttf(fam, weight, fonts_dir)
                     if ttf_path and os.path.exists(ttf_path):
                         FONT = ttf_path
                     else:
-                        # fallback to family name (requires system-installed font)
-                        FONT = fam
+                        FONT = fam  # fallback to family name (system-installed)
             else:
                 # Support 'font' as either a direct path, a system family, or a Google family hint
                 font_val = str(tpl.get("font", FONT))
                 fonts_dir = os.path.join(os.path.dirname(os.path.dirname(HERE)), "assets", "fonts")
-
-                # If it looks like a path or endswith ttf/otf, resolve absolute path
                 if os.path.sep in font_val or font_val.lower().endswith((".ttf", ".otf")):
                     abs_path = font_val if os.path.isabs(font_val) else os.path.join(fonts_dir, font_val)
                     FONT = abs_path
                 else:
-                    # Treat as family name; try Google Fonts download using inferred weight
                     inferred_weight = _infer_weight_from_name(font_val)
-                    # Remove common suffixes like -Bold/-Regular from family
                     fam = re.sub(r"[- ]?(thin|extralight|light|regular|medium|semibold|bold|extrabold|black)\b", "", font_val, flags=re.I).strip()
                     ttf_path = ensure_google_font_ttf(fam, inferred_weight, fonts_dir)
                     if ttf_path and os.path.exists(ttf_path):
                         FONT = ttf_path
                     else:
-                        # fallback to provided string; requires system-installed font
                         FONT = font_val
 
             # Vertical position handling
@@ -334,26 +364,22 @@ try:
             y_off = tpl.get("y_offset", None)
             if isinstance(y_val, str) and y_val.lower() == "center":
                 TEXT_POS_MODE = "center"
-            elif isinstance(y_val, (int, float)):
-                TEXT_POS_MODE = "absolute"
-                TEXT_POS_Y = int(float(y_val))
-            # Optional offset from centered baseline
-            if isinstance(y_off, (int, float)):
-                TEXT_POS_OFFSET = int(float(y_off))
+            elif isinstance(y_val, (int, float, str)):
+                try:
+                    TEXT_POS_MODE = "absolute"
+                    TEXT_POS_Y = int(float(str(y_val).replace("px", "")))
+                except Exception:
+                    pass
+            if isinstance(y_off, (int, float, str)):
+                try:
+                    TEXT_POS_OFFSET = int(float(str(y_off).replace("px", "")))
+                except Exception:
+                    pass
 except Exception:
     # Silently ignore issues and keep defaults
     pass
 
-# Hardcoded content: sequence of segments with durations (seconds)
-TEXT_BLOCKS = [
-    {"text": "5 quick tips to instantly improve your presentations.", "duration": 2.2},
-    {"text": "1) Open with a strong hook—state a bold result or question.", "duration": 2.0},
-    {"text": "2) Use one key idea per slide. Remove anything that doesn’t support it.", "duration": 2.2},
-    {"text": "3) Tell a story—set up, conflict, resolution. Keep momentum.", "duration": 2.0},
-    {"text": "4) Use large text and high contrast. Design for the back row.", "duration": 2.0},
-    {"text": "5) Rehearse out loud. Time yourself and trim ruthlessly.", "duration": 2.2},
-    {"text": "Follow for more concise comms tips!", "duration": 1.8},
-]
+# TEXT_BLOCKS moved to top of file
 
 
 def typing_clip_by_chars(text: str, duration: float, fontsize: int, font: str, video_size: tuple[int, int], text_width: int):
@@ -420,6 +446,64 @@ def main():
     except Exception:
         # Fallback to static image behavior if video decoding fails
         bg_clip = ImageClip(BACKGROUND_IMAGE).resize(VIDEO_SIZE).set_duration(total_duration)
+
+    # If called with '--image' (or 'image' / '-i'), export screenshots per text block and exit early
+    image_mode = any(arg in ("--image", "image", "-i") for arg in sys.argv[1:])
+    if image_mode:
+        cursor_time = 0.0
+        for idx, block in enumerate(TEXT_BLOCKS, start=1):
+            seg_text = block["text"].strip()
+            seg_duration = max(0.2, float(block["duration"]))
+
+            # Prepare final text clip (static) for this block
+            txt_clip = TextClip(
+                seg_text,
+                fontsize=FONT_SIZE,
+                font=FONT,
+                color=TEXT_COLOR,
+                method="caption",
+                size=(TEXT_WIDTH, None),
+                align="center",
+                stroke_color=STROKE_COLOR,
+                stroke_width=STROKE_WIDTH,
+                transparent=True,
+            ).set_duration(0.1)
+            _ = txt_clip.get_frame(0)
+            if TEXT_POS_MODE == "absolute":
+                y = max(0, min(VIDEO_SIZE[1] - txt_clip.h, TEXT_POS_Y))
+            else:
+                y = (VIDEO_SIZE[1] - txt_clip.h) / 2 + TEXT_POS_OFFSET
+            txt_clip = txt_clip.set_position(("center", y))
+
+            # Snapshot time when typing completes for this block
+            t_snapshot = max(0.0, min(cursor_time + seg_duration, total_duration - 1e-3))
+            try:
+                bg_frame = bg_clip.get_frame(t_snapshot)
+            except Exception:
+                bg_frame = bg_clip.get_frame(0)
+            bg_frame_clip = ImageClip(bg_frame).set_duration(0.1)
+
+            # Compose single frame (no overlays for speed)
+            comp = CompositeVideoClip([bg_frame_clip, txt_clip], size=VIDEO_SIZE).set_duration(0.1)
+            out_path = os.path.join(OUTPUT_IMAGES_DIR, f"shot_{idx:02}.png")
+            comp.save_frame(out_path, t=0.0)
+
+            # cleanup
+            try: comp.close()
+            except Exception: pass
+            try: bg_frame_clip.close()
+            except Exception: pass
+            try: txt_clip.close()
+            except Exception: pass
+
+            cursor_time += seg_duration + PAUSE_AFTER
+
+        # close background and exit
+        try: bg_clip.close()
+        except Exception: pass
+        gc.collect()
+        print(f"🖼️  Saved {len(TEXT_BLOCKS)} images to {OUTPUT_IMAGES_DIR}")
+        return
 
     # build text layers
     clips = []
@@ -512,6 +596,9 @@ def main():
         except Exception:
             continue
 
+    
+
+    # Otherwise, render the full video as before
     final = CompositeVideoClip([bg_clip] + overlay_clips + clips, size=VIDEO_SIZE)
 
     final.write_videofile(
